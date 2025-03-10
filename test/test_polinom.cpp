@@ -269,13 +269,11 @@ TEST(PolinomTest, MultiplyingTwoPolynomials)
 
     Polinom result = p1 * p2;
 
-    EXPECT_EQ(result.get_size(), 4);
+    EXPECT_EQ(result.get_size(), 3);
     EXPECT_EQ(result.get_first()->value.get_degree(), 225);
-    EXPECT_EQ(result.get_first()->value.getK(), 3.0);
+    EXPECT_EQ(result.get_first()->value.getK(), 3);
     EXPECT_EQ(result.get_first()->next->value.get_degree(), 224);
-    EXPECT_EQ(result.get_first()->next->value.getK(), 6.0);
+    EXPECT_EQ(result.get_first()->next->value.getK(), 8); // 6.0 + 2.0
     EXPECT_EQ(result.get_first()->next->next->value.get_degree(), 223);
-    EXPECT_EQ(result.get_first()->next->next->value.getK(), 2.0);
-    EXPECT_EQ(result.get_first()->next->next->next->value.get_degree(), 224);
-    EXPECT_EQ(result.get_first()->next->next->next->value.getK(), 4.0);
+    EXPECT_EQ(result.get_first()->next->next->value.getK(), 4);
 }

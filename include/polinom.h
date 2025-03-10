@@ -24,7 +24,7 @@ public:
 
     size_t get_z_degree() const noexcept { return degree % 10; }
 
-    size_t get_degree() const noexcept
+    size_t get_degree() const
     {
         if (this == nullptr)
             throw std::domain_error("domain_error");
@@ -147,14 +147,13 @@ public:
     Polinom operator*(const Polinom& polinom) const
     {
         Polinom res;
-        Iterator it1;
-        for (it1 = begin() ; it1 != end(); it1++)
+        for (Iterator it1 = begin(); it1 != end(); ++it1)
         {
-            for (Iterator it2 = polinom.begin(); it2 != polinom.end(); it2++)
+            for (Iterator it2 = polinom.begin(); it2 != polinom.end(); ++it2)
             {
                 Monom product = (*it1) * (*it2);
                 if (product.getK() != 0)
-                    res.addMonom(product);
+                    res.addMonom(product); 
             }
         }
         return res;

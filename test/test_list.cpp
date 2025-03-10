@@ -118,10 +118,9 @@ TEST(ListTest, EraseNodeNotInListThrowsException)
     list.push_back(1);
     list.push_back(2);
 
-    Node<int>* node = new Node<int>(3);
+    std::unique_ptr<Node<int>> node(new Node<int>(3));
 
-    EXPECT_THROW(list.erase(node), std::logic_error);
-    delete node;
+    EXPECT_THROW(list.erase(node.get()), std::logic_error);
 }
 
 TEST(ListTest, ClearRemovesAllElements)
