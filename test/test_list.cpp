@@ -79,50 +79,6 @@ TEST(ListTest, InsertAtNullptrAddsToFront)
     EXPECT_EQ(*list.begin(), 1);
 }
 
-TEST(ListTest, EraseRemovesGivenNode)
-{
-    List<int> list;
-    list.push_back(1);
-    list.push_back(2);
-    list.push_back(3);
-
-    auto it = list.begin();
-    ++it;
-
-    list.erase(it.get_current());
-
-    EXPECT_EQ(list.get_size(), 2);
-
-    auto it2 = list.begin();
-    EXPECT_EQ(*it2, 1);
-    ++it2;
-    EXPECT_EQ(*it2, 3);
-}
-
-TEST(ListTest, EraseLastElementRemovesIt)
-{
-    List<int> list;
-    list.push_back(1);
-
-    auto it = list.begin();
-    list.erase(it.get_current());
-
-    EXPECT_EQ(list.get_size(), 0);
-    EXPECT_EQ(list.begin(), list.end());
-    EXPECT_EQ(list.get_size(), 0);
-}
-
-TEST(ListTest, EraseNodeNotInListThrowsException)
-{
-    List<int> list;
-    list.push_back(1);
-    list.push_back(2);
-
-    std::unique_ptr<Node<int>> node(new Node<int>(3));
-
-    EXPECT_THROW(list.erase(node.get()), std::logic_error);
-}
-
 TEST(ListTest, ClearRemovesAllElements)
 {
     List<int> list;

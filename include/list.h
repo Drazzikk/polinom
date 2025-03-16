@@ -11,6 +11,8 @@ public:
     Node* next;
 
     Node(T val = T(), Node* nxt = nullptr) : value(val), next(nxt) {}
+    T& operator*() { return value; }
+    const T& operator*() const { return value; }
 };
 
 template<typename T>
@@ -53,7 +55,7 @@ public:
         {
             if (!current)
                 throw std::domain_error("domain_error");
-            return current->value;
+            return **current;
         }
 
         bool operator==(const Iterator& it) const { return this->current == it.current; }
@@ -155,41 +157,16 @@ public:
         }
     }
 
-    void erase(Node<T>* node)
-    {
-        if (!node)
+    void erase(Node<T>* p) {
+        if (p == nullptr)
             pop_front();
-        else
-        {
-            bool nodeFound = false;
-            Node<T>* current = first;
-            Node<T>* prev = nullptr;
-            while (current)
-            {
-                if (current == node)
-                {
-                    nodeFound = true;
-                    break;
-                }
-                prev = current;
-                current = current->next;
+        else {
+            Node<T>* temp = p->next;
+            if (temp != nullptr) {
+                p->next = temp->next;
+                delete temp;
+                size--;
             }
-            if (!nodeFound)
-                throw std::logic_error("Node not in list");
-            if (prev)
-            {
-                prev->next = node->next;
-                if (!prev->next)
-                    last = prev;
-            }
-            else
-            {
-                first = node->next;
-                if (!first)
-                    last = nullptr;
-            }
-            delete node;
-            size--;
         }
     }
 };

@@ -37,17 +37,29 @@ public:
 
     bool is_deg_correct() const noexcept { return (get_x_degree() <= MAX_DEGREE && get_y_degree() <= MAX_DEGREE && get_z_degree() <= MAX_DEGREE); }
 
-    Monom operator+(const Monom& monom)
-    {
-        if (degree == monom.degree)
-            return Monom(degree, k + monom.k);
+    Monom operator+(const Monom& monom) const {
+        if (degree == monom.degree) {
+            double result_k = k + monom.k;
+            if (result_k == 0) {
+                return Monom(0, 0);
+            }
+            else {
+                return Monom(degree, result_k);
+            }
+        }
         throw std::domain_error("domain_error");
     }
 
-    Monom operator-(const Monom& monom)
-    {
-        if (degree == monom.degree)
-            return Monom(degree, k - monom.k);
+    Monom operator-(const Monom& monom) const {
+        if (degree == monom.degree) {
+            double result_k = k - monom.k;
+            if (result_k == 0) {
+                return Monom(0, 0);
+            }
+            else {
+                return Monom(degree, result_k);
+            }
+        }
         throw std::domain_error("domain_error");
     }
 
@@ -91,23 +103,57 @@ public:
     {
         if (monom.getK() == 0) return;
 
-        Iterator prev = end();
-        Iterator curr = begin();
+        Node<Monom>* prevNode = nullptr;
+        Node<Monom>* currNode = first; 
 
-        while (curr != end() && (*curr).get_degree() > monom.get_degree())
+        while (currNode != nullptr && currNode->value.get_degree() > monom.get_degree())
         {
-            prev = curr;
-            ++curr;
+            prevNode = currNode;
+            currNode = currNode->next;
         }
 
-        if (curr != end() && (*curr).get_degree() == monom.get_degree())
-        {
-            (*curr).setK((*curr).getK() + monom.getK());
-            if ((*curr).getK() == 0)
-                erase(curr.get_current());
+        if (currNode != nullptr && currNode->value.get_degree() == monom.get_degree()) {
+            double newK = currNode->value.getK() + monom.getK();
+            if (newK == 0) {
+                // Erase the node
+                if (prevNode == nullptr) {
+                    pop_front();  
+                }
+                else {
+                    prevNode->next = currNode->next;
+                    if (currNode == last) {
+                        last = prevNode;
+                    }
+                    delete currNode;
+                    size--;
+                }
+            }
+            else {
+                currNode->value.setK(newK);  
+            }
         }
-        else
-            insert(monom, prev.get_current());
+        else {
+            Node<Monom>* newNode = new Node<Monom>(monom);
+
+            if (prevNode == nullptr)
+            {
+                newNode->next = first;
+                first = newNode;
+                if (last == nullptr)
+                    last = newNode;
+            }
+            else
+            {
+                newNode->next = currNode;
+                prevNode->next = newNode;
+                if (currNode == nullptr) {
+                    last = newNode; 
+                }
+
+            }
+            size++;
+
+        }
     }
 
     Polinom operator+(const Polinom& polinom) const
